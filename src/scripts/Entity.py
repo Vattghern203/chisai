@@ -1,17 +1,60 @@
 import pygame
 
-class Entity:
+from typing import List
 
-    def __init__(self, x:int, y:int, width: float, height: float):
+from scripts.settings import WIDTH
 
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.sprite = pygame.Surface((width, height))
-        self.sprite.fill((255, 0, 0))
+# Entity represents a moving character
 
-    def draw(self, screen: pygame.Surface):
+class Entity(pygame.sprite.Sprite):
 
-        screen.blit(self.sprite, (self.x, self.y))
+    def __init__(self, position:List[float], sprite_path:str, groups:pygame.sprite.Group(), collision_group:pygame.sprite.Group()):
 
+        super().__init__(groups, collision_group)
+
+        self.position = position
+        self.image = pygame.image.load(sprite_path)
+
+        self.rect = self.image.get_rect(topleft=position)
+
+        self.direction = pygame.math.Vector2()
+        self.speed = 5
+
+        self.jump_force = 16
+        self.gravity = 0.6
+        self.touching_ground = False
+
+        self.all_sprites = groups
+        self.colision_group = collision_group
+
+
+    def move(self):
+        self.rect.x += self.direction.x * self.speed
+        self.rect.y += self.direction.y * self.speed
+
+    def gravity_exists(self):
+        self.direction.y += self.gravity
+        self.rect.y += self.direction.y
+        print('Newton Sucks!')
+
+
+    # Handle the colison of each entity
+    def handle_colision(self):
+
+        """ collisions = pygame.sprite.spritecollide(self, self.colision_group, False)
+
+        for collision in collisions:
+
+            print(collision) """
+        
+        for sprite in self.colision_group:
+            if sprite.rect.colliderect(self.rect):
+                if self.direction.y > 0:
+                    print('out of y')
+
+                if self.direction.x < 0 or self.direction.x > WIDTH:
+
+                    self.position = (0, 0)
+
+    def handle_flip(self):
+        pass
