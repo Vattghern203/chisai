@@ -1,6 +1,7 @@
 import pygame
 
 from scripts.utils.fade import Fade
+from scripts.utils.Music import MusicPlayer
 
 class Scene:
 
@@ -8,6 +9,7 @@ class Scene:
         
         self.display = pygame.display.get_surface()
         self.all_sprites = pygame.sprite.Group()
+
         self.active = True
 
         self.fade = Fade(5)

@@ -24,11 +24,10 @@ class StartGame:
         self.running = True
         self.clock = pygame.time.Clock()
 
-        self.scene: Literal["menu", "game", "gameover"] = "menu"
-        self.current_scene = Menu()
+        self.scene: Literal["menu", "game", "gameover"] = "game"
+        self.current_scene = Game()
 
         self.target_fps = FPS
-
 
     def run(self):
 
@@ -38,11 +37,17 @@ class StartGame:
 
             if self.scene == "menu" and self.current_scene.active == False:
                 self.scene = "game"
+
                 self.current_scene = Game()
+
             elif self.scene == "game" and self.current_scene.active == False:
+
                 self.scene = "gameover"
+
                 self.current_scene = GameOver()
+
             elif self.scene == "gameover" and self.current_scene.active == False:
+
                 self.scene = "menu"
                 self.current_scene = Menu()
 
@@ -51,6 +56,10 @@ class StartGame:
                 if event.type == pygame.QUIT:
 
                     pygame.quit()
+
+                if event.type == pygame.K_e:
+
+                    self.scene = "game"
 
                 self.current_scene.events(event)
 

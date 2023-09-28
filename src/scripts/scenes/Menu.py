@@ -1,6 +1,7 @@
 import pygame
 from scripts.scenes.Scene import Scene
 from scripts.elements.Object import Object
+from scripts.utils.Music import MusicPlayer
 
 import sys
 
@@ -9,6 +10,10 @@ class Menu(Scene):
         super().__init__()
 
         self.bg = Object("src/assets/imgs/bg/menu.jpg", [0, 0], [self.all_sprites])
+
+        self.music_player = MusicPlayer()
+        self.music_path = "src/assets/music/when it's dark out.mp3"
+        self.music_player.play_music(self.music_path) 
 
         # Additional initialization for the menu
 
@@ -31,6 +36,3 @@ class Menu(Scene):
 
     def update(self):
         self.all_sprites.update()
-        # Additional update logic for the menu
-
-        
