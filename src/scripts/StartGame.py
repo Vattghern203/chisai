@@ -6,6 +6,8 @@ from scripts.scenes.Menu import Menu
 from scripts.scenes.Game import Game
 from scripts.scenes.GameOver import GameOver
 
+import sys
+
 from scripts.settings import FPS, WIDTH, HEIGHT, TITLE, BG_COLOR
 
 class StartGame:
@@ -21,14 +23,20 @@ class StartGame:
         # It must be called before any Scene
         self.display = pygame.display.set_mode([WIDTH, HEIGHT])
 
+        # Controls the gaming loop
         self.running = True
+
+        # Locks the FPS
         self.clock = pygame.time.Clock()
-
-        self.scene: Literal["menu", "game", "gameover"] = "game"
-        self.current_scene = Game()
-
+        # The desired FPS
         self.target_fps = FPS
 
+        # All possible scenarios
+        self.scene: Literal["menu", "game", "gameover"] = "gameover"
+        self.current_scene = GameOver()
+
+
+    # Game Loop
     def run(self):
 
         print(self.scene)
@@ -56,6 +64,7 @@ class StartGame:
                 if event.type == pygame.QUIT:
 
                     pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.K_e:
 
@@ -63,7 +72,8 @@ class StartGame:
 
                 self.current_scene.events(event)
 
-            self.display.fill(BG_COLOR)
+            self.clock.tick(self.target_fps)
+
             self.current_scene.draw()
             self.current_scene.update()
 

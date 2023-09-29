@@ -1,19 +1,21 @@
 import pygame
 
-from typing import List
+from typing import Any, List
 
-from scripts.settings import WIDTH
+from scripts.settings import WIDTH, HEIGHT, TILE_SIZE
 
 # Entity represents a moving character
 
 class Entity(pygame.sprite.Sprite):
 
-    def __init__(self, position:List[float], sprite_path:str, groups:pygame.sprite.Group(), collision_group:pygame.sprite.Group()):
+    def __init__(self, position:List[float | int], sprite_path:str, groups:pygame.sprite.Group(), collision_group:pygame.sprite.Group()):
 
         super().__init__(groups, collision_group)
 
+        resized_img = pygame.transform.scale(pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
+
         self.position = position
-        self.image = pygame.image.load(sprite_path)
+        self.image = resized_img
 
         self.rect = self.image.get_rect(topleft=position)
 
@@ -58,3 +60,12 @@ class Entity(pygame.sprite.Sprite):
 
     def handle_flip(self):
         pass
+
+
+class GenericEntity(pygame.sprite.Sprite):
+
+    def __init__(self, groups, image = pygame.Surface((TILE_SIZE, TILE_SIZE)), position = (HEIGHT, 0)) -> None:
+        super().__init__(groups)
+
+        self.image = image
+        self.rect = self.image.get_rect(topleft=position)

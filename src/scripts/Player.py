@@ -6,23 +6,36 @@ class Player(Entity):
     def __init__(self, position, sprite_path, groups, collision_group):
         super().__init__(position, sprite_path, groups, collision_group)
 
+        self.speed = 10
+
     def input(self):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
+
             self.direction.x = -1
-            print("going left")
+    
         elif keys[pygame.K_d]:
+
             self.direction.x = 1
+
         elif keys[pygame.K_s]:
+
             self.direction.y = 1
+
         elif keys[pygame.K_w]:
+
             self.direction.y = -1
+
         elif keys[pygame.K_SPACE]:
+
             self.direction.y -= self.jump_force  # Adjusted this line to apply an upward force
         else:
+
             self.direction.x = 0
             self.direction.y = 0
+
+        print(self.rect.x, self.rect.y)
 
     def update(self):
         self.move()

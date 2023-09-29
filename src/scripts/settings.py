@@ -7,6 +7,7 @@ HEIGHT = 720
 
 FPS = 60
 BG_COLOR = (100, 100, 100)
+TILE_SIZE = 64
 
 # Extras
 
