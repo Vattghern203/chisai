@@ -22,7 +22,8 @@ class Player(Entity):
 
         # Group Related
 
-        self.block_group: pygame.sprite.Group = parameters['block_group']
+        self.block_group = parameters['block_group']
+        self.collision_group = parameters['collision_group']
 
     def input(self):
         
@@ -55,39 +56,45 @@ class Player(Entity):
         # print(self.rect.x, self.rect.y)
 
 
-    def handle_collision(self):
+    def handle_collision_y(self):
 
-        print('Checking Collision')
-        
-        if self.orientation == "horizontal":
+        for block in self.block_group:
 
-            for block in self.block_group:
+            if block.rect.colliderect(self.rect):
 
-                if block.rect.colliderect(self.rect):
+                if self.direction.y > 0:
 
-                    if self.direction.x > 0:
+                    self.direction.y = 0
+                    self.rect.bottom = block.rect.top
 
-                        self.rect.right = block.rect.left
+                if self.direction.y < 0:
 
-                    if self.direction.x < 0:
+                    self.direction.y = 0
+                    self.rect.top = block.rect.bottom
 
-                        self.rect.left = block.rect.right
+    
+    def handle_collision_x(self):
 
-        elif self.orientation == "vertical":
+        for block in self.block_group:
 
-            for block in self.block_group:
+            if block.rect.colliderect(self.rect):
 
-                if block.rect.colliderect(self.rect):
+                if self.direction.x > 0:
 
-                    if self.direction.y > 0:
+                    self.rect.right = block.rect.left
 
-                        self.rect.bottom = block.rect.top
+                if self.direction.x < 0:
 
-                    if self.direction.y < 0:
+                    self.rect.left = block.rect.right
 
-                        self.rect.top = block.rect.bottom
+
+    def handle_phisycs(self):
+
+        self.handle_collision_x()
+        self.handle_collision_y()
+
 
     def update(self):
         self.move()
         self.input()
-        self.handle_collision()
+        self.handle_phisycs()

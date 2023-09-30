@@ -1,13 +1,12 @@
 import pygame
-from scripts.scenes.Scene import Scene
+
 from scripts.elements.Object import Object
-from scripts.utils.Music import MusicPlayer
-from scripts.Entity import GenericEntity
 from scripts.Enemy import Enemy
-
-from scripts.settings import HEIGHT, WIDTH, TILE_SIZE
-
+from scripts.Entity import GenericEntity
 from scripts.Player import Player
+from scripts.scenes.Scene import Scene
+from scripts.settings import HEIGHT, TILE_SIZE, WIDTH
+from scripts.utils.Music import MusicPlayer
 
 
 class Game(Scene):
@@ -61,8 +60,9 @@ class Game(Scene):
 
             GenericEntity(
                 [
+                    self.block_group,
                     self.all_sprites,
-                    self.block_group
+                    self.collision_group
                 ],
 
                 position = (
