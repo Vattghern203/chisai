@@ -3,6 +3,10 @@
 WIDTH = 1280
 HEIGHT = 720
 
+# PHYSICS
+
+GRAVITY = 0.3
+
 # Game Config
 
 FPS = 60

@@ -3,6 +3,7 @@ from scripts.scenes.Scene import Scene
 from scripts.elements.Object import Object
 from scripts.utils.Music import MusicPlayer
 from scripts.Entity import GenericEntity
+from scripts.Enemy import Enemy
 
 from scripts.settings import HEIGHT, WIDTH, TILE_SIZE
 
@@ -16,13 +17,32 @@ class Game(Scene):
 
         self.bg = Object("src/assets/imgs/bg/muzamba.jpg", [0, 0], [self.all_sprites])
 
+        self.enemy_sprites = pygame.sprite.Group()
         self.collision_group = pygame.sprite.Group()
 
         self.music_player = MusicPlayer()
         self.music_path = "src/assets/music/Debussy - Clair de Lune.mp3"
         self.music_player.play_music(self.music_path) 
 
-        self.player = Player(position=[WIDTH / 10, HEIGHT / 2], sprite_path="src/assets/sprites/hero/hero.png", groups=self.all_sprites, collision_group=self.collision_group)
+        self.player = Player(
+            position=[WIDTH / 10, HEIGHT / 2],
+            sprite_path="src/assets/sprites/hero/hero.png", groups=self.all_sprites, 
+            collision_group=self.collision_group
+        )
+
+        self.enemy = Enemy(
+            position=(100, 100), 
+            sprite_path="src/assets/sprites/enemy/enemy.png", groups=self.all_sprites, 
+            collision_group=self.collision_group, 
+            behavior="walk_lr"
+        )
+
+        self.enemy_up = Enemy(
+            position=(400, 400), 
+            sprite_path="src/assets/sprites/enemy/enemy.png", groups=self.all_sprites, 
+            collision_group=self.collision_group, 
+            behavior="walk_td"
+        )
 
     def events(self, event):
 
@@ -31,9 +51,9 @@ class Game(Scene):
 
     def generate_terrain(self):
 
-        for i in range(10):
+        for i in range(20):
 
-            GenericEntity(self.terrain_sprites, position=(i * 64, HEIGHT))
+            GenericEntity(self.terrain_sprites, position=(TILE_SIZE * i, (HEIGHT - TILE_SIZE)))
 
     def draw(self):
 

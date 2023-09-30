@@ -32,8 +32,8 @@ class StartGame:
         self.target_fps = FPS
 
         # All possible scenarios
-        self.scene: Literal["menu", "game", "gameover"] = "gameover"
-        self.current_scene = GameOver()
+        self.scene: Literal["menu", "game", "gameover"] = "game"
+        self.current_scene = Game()
 
 
     # Game Loop
