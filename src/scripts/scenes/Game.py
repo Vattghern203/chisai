@@ -26,23 +26,29 @@ class Game(Scene):
 
         self.player = Player(
             position=[WIDTH / 10, HEIGHT / 2],
-            sprite_path="src/assets/sprites/hero/hero.png", groups=self.all_sprites, 
-            collision_group=self.collision_group
+            sprite_path="src/assets/sprites/hero/hero.png", 
+            groups=[self.all_sprites], 
+            parameters={
+                'block_group': self.block_group,
+                'collision_group': self.collision_group
+            }, 
         )
 
         self.enemy = Enemy(
             position=(100, 100), 
-            sprite_path="src/assets/sprites/enemy/enemy.png", groups=self.all_sprites, 
-            collision_group=self.collision_group, 
-            behavior="walk_lr"
+            sprite_path="src/assets/sprites/enemy/enemy.png", 
+            groups=[self.all_sprites],  
+            behavior="walk_lr",
         )
 
         self.enemy_up = Enemy(
             position=(400, 400), 
-            sprite_path="src/assets/sprites/enemy/enemy.png", groups=self.all_sprites, 
-            collision_group=self.collision_group, 
-            behavior="walk_td"
+            sprite_path="src/assets/sprites/enemy/enemy.png", 
+            groups=[self.all_sprites],  
+            behavior="walk_td",
         )
+
+        self.generate_terrain()
 
     def events(self, event):
 
@@ -53,17 +59,23 @@ class Game(Scene):
 
         for i in range(20):
 
-            GenericEntity(self.terrain_sprites, position=(TILE_SIZE * i, (HEIGHT - TILE_SIZE)))
+            GenericEntity(
+                [
+                    self.all_sprites,
+                    self.block_group
+                ],
+
+                position = (
+                    TILE_SIZE * i, (HEIGHT - TILE_SIZE)
+                )
+            )
 
     def draw(self):
 
         super().draw()
 
         self.all_sprites.draw(self.display)
-        self.terrain_sprites.draw(self.display)
-        self.generate_terrain()
 
     def update(self):
 
         self.all_sprites.update()
-        self.terrain_sprites.update()

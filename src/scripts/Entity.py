@@ -12,13 +12,11 @@ class Entity(pygame.sprite.Sprite):
                 self, 
                 position:List[float | int], 
                 sprite_path:str, 
-                groups:pygame.sprite.Group(), 
-                collision_group:pygame.sprite.Group(),
+                groups,
+                parameters: dict
             ):
 
-        super().__init__(groups, collision_group)
-
-        print(collision_group)
+        super().__init__(groups)
 
         # Position
 
@@ -28,11 +26,10 @@ class Entity(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
 
-        self.orientation: Literal["top",  "left", "right", "down"] = "right"
+        self.orientation: Literal["horizontal", "vertical"] = "vertical"
 
         self.rect = self.image.get_rect(topleft=position)
         self.all_sprites = groups
-        self.colision_group = collision_group
 
         # Movimentation
 
@@ -52,21 +49,17 @@ class Entity(pygame.sprite.Sprite):
         self.direction.y += GRAVITY * self.mass
 
         self.rect.x += self.direction.x * self.speed
+
+        self.orientation = "horizontal"
+
         self.rect.y += self.direction.y * self.speed
+
+        self.orientation = "vertical"
 
     def gravity_exists(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
         print('Newton Sucks!')
-
-
-    # Handle the colison of each entity
-    def handle_colision(self):
-
-        pass
-
-    def handle_flip(self):
-        pass
 
 
 class GenericEntity(pygame.sprite.Sprite):

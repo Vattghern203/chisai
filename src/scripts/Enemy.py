@@ -10,11 +10,19 @@ class Enemy(Entity):
     def __init__(self, 
                 position: List[float], 
                 sprite_path: str, 
-                groups: pygame.sprite.Group, 
-                collision_group: pygame.sprite.Group, 
-                behavior:Literal["walk_lr", "walk_td", "shoot", "follow", "jump", "explode"]
+                groups: pygame.sprite.Group,
+                behavior:Literal[
+                    "walk_lr",
+                    "walk_td",
+                    "shoot",
+                    "follow",
+                    "jump",
+                    "explode"
+                ],
+                parameters: dict = {},
                 ):
-        super().__init__(position, sprite_path, groups, collision_group)
+        
+        super().__init__(position, sprite_path, groups, parameters)
 
         self.speed: float = 3  # Adjust speed as needed
         self.direction: pygame.math.Vector2 = pygame.math.Vector2(1, 0)  # Start by moving to the right

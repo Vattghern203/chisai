@@ -28,7 +28,7 @@ class GameOver(Scene):
 
     def handle_death_text(self) -> str:
 
-        idx = random.randint(0, len(DEATH_MESSAGE))
+        idx = random.randint(0, len(DEATH_MESSAGE) - 1)
 
         return f"Você {DEATH_MESSAGE[idx].title()}!"
 

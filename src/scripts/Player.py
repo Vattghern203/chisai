@@ -11,16 +11,21 @@ class Player(Entity):
             position:List[int], 
             sprite_path:str, 
             groups:pygame.sprite.Group(), 
-            collision_group:pygame.sprite.Group()
+            parameters: dict = {}
         ):
 
-        super().__init__(position, sprite_path, groups, collision_group)
+        super().__init__(position, sprite_path, groups, parameters)
 
         self.speed: int = 12
         
         self.mass: float | int = 5
 
+        # Group Related
+
+        self.block_group: pygame.sprite.Group = parameters['block_group']
+
     def input(self):
+        
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -49,9 +54,40 @@ class Player(Entity):
 
         # print(self.rect.x, self.rect.y)
 
+
+    def handle_collision(self):
+
+        print('Checking Collision')
+        
+        if self.orientation == "horizontal":
+
+            for block in self.block_group:
+
+                if block.rect.colliderect(self.rect):
+
+                    if self.direction.x > 0:
+
+                        self.rect.right = block.rect.left
+
+                    if self.direction.x < 0:
+
+                        self.rect.left = block.rect.right
+
+        elif self.orientation == "vertical":
+
+            for block in self.block_group:
+
+                if block.rect.colliderect(self.rect):
+
+                    if self.direction.y > 0:
+
+                        self.rect.bottom = block.rect.top
+
+                    if self.direction.y < 0:
+
+                        self.rect.top = block.rect.bottom
+
     def update(self):
         self.move()
         self.input()
-        self.handle_colision()
-        # Uncomment when there's ground
-        # self.gravity_exists()
+        self.handle_collision()
