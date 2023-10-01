@@ -5,7 +5,7 @@ HEIGHT = 720
 
 # PHYSICS
 
-GRAVITY = 0.1
+GRAVITY = 0.6
 TERMINAL_VELOCITY = 2
 # Game Config
 

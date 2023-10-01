@@ -36,14 +36,14 @@ class Game(Scene):
         self.enemy = Enemy(
             position=(100, 100), 
             sprite_path="src/assets/sprites/enemy/enemy.png", 
-            groups=[self.all_sprites],  
+            groups=[self.all_sprites, self.enemy_sprites],  
             behavior="walk_lr",
         )
 
         self.enemy_up = Enemy(
             position=(400, 400), 
             sprite_path="src/assets/sprites/enemy/enemy.png", 
-            groups=[self.all_sprites],  
+            groups=[self.all_sprites, self.enemy_sprites],  
             behavior="walk_td",
         )
 
@@ -60,8 +60,8 @@ class Game(Scene):
 
             GenericEntity(
                 [
-                    self.block_group,
                     self.all_sprites,
+                    self.block_group,
                     self.collision_group
                 ],
 

@@ -2,7 +2,7 @@ from typing import List, Literal
 
 import pygame
 
-from scripts.settings import HEIGHT, TILE_SIZE, WIDTH, GRAVITY
+from scripts.settings import HEIGHT, TILE_SIZE, GRAVITY, TERMINAL_VELOCITY
 
 # Entity represents a moving character
 
@@ -13,60 +13,81 @@ class Entity(pygame.sprite.Sprite):
                 position:List[float | int], 
                 sprite_path:str, 
                 groups,
-                parameters: dict
+                parameters: dict = {}
             ):
 
         super().__init__(groups)
 
-        # Position
+        # Position ----------------------------------------
 
         self.position: List[float | int] = position
 
-        # Sprite
+        # Sprite ----------------------------------------
 
         self.image = pygame.transform.scale(pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
+        self.all_sprites = groups
 
         self.orientation: Literal["horizontal", "vertical"] = "vertical"
 
         self.rect = self.image.get_rect(topleft=position)
-        self.all_sprites = groups
 
-        # Movimentation
+        # Movimentation ----------------------------------------
 
         self.direction = pygame.math.Vector2()
-        self.speed: int = 6
+        self.speed: int = 1
 
-        # Physics
+        # Physics ----------------------------------------
 
-        self.mass = 5
+        self.mass = 1
+
         self.jump_force: int = 16
+
         self.touching_ground: bool = False
 
-        self.health: int | float = 5
+        self.terminal_velocity: float | int = self.mass * TERMINAL_VELOCITY
+
+        self.gravitacional_force: float | int = GRAVITY * self.mass
+
+        self.health: int = 5
 
     def move(self):
 
-        self.direction.y += GRAVITY * self.mass
+        if self.touching_ground:
+
+            self.gravitacional_force = 0
+
+        elif not(self.touching_ground):
+
+            self.gravitacional_force = GRAVITY * self.mass
+
+            self.direction.y += self.gravitacional_force
+        
+        # Determines a terminal velocity to avoid physics problem, and the risk of creating portals to another worlds and this kind of stuff
+
+        if self.direction.y > self.terminal_velocity:
+
+            self.direction.y = self.terminal_velocity
 
         self.rect.x += self.direction.x * self.speed
 
-        self.orientation = "horizontal"
-
         self.rect.y += self.direction.y * self.speed
 
-        self.orientation = "vertical"
+    def handle_orientation(self):
 
-    def gravity_exists(self):
-        self.direction.y += self.gravity
-        self.rect.y += self.direction.y
-        print('Newton Sucks!')
+        if self.direction.x != 0:
+
+            self.orientation = "horizontal"
+
+        elif self.direction.y != 0:
+
+            self.orientation = "vertical"
 
 
 class GenericEntity(pygame.sprite.Sprite):
 
     def __init__(
             self, 
-            groups:pygame.sprite.Group(), 
+            groups:pygame.sprite.Group, 
             image = pygame.Surface((TILE_SIZE, TILE_SIZE)), 
             position = (HEIGHT, 0)
         ):
