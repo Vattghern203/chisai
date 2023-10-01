@@ -29,21 +29,22 @@ class Game(Scene):
             groups=[self.all_sprites], 
             parameters={
                 'block_group': self.block_group,
-                'collision_group': self.collision_group
+                'collision_group': self.collision_group,
+                'enemy_sprites': self.enemy_sprites
             }, 
         )
 
         self.enemy = Enemy(
             position=(100, 100), 
             sprite_path="src/assets/sprites/enemy/enemy.png", 
-            groups=[self.all_sprites, self.enemy_sprites],  
+            groups=[self.all_sprites, self.enemy_sprites, self.collision_group],  
             behavior="walk_lr",
         )
 
         self.enemy_up = Enemy(
             position=(400, 400), 
             sprite_path="src/assets/sprites/enemy/enemy.png", 
-            groups=[self.all_sprites, self.enemy_sprites],  
+            groups=[self.all_sprites, self.enemy_sprites, self.collision_group],  
             behavior="walk_td",
         )
 
@@ -78,4 +79,5 @@ class Game(Scene):
 
     def update(self):
 
+        self.player.update()
         self.all_sprites.update()

@@ -9,6 +9,7 @@ from scripts.scenes.GameOver import GameOver
 import sys
 
 from scripts.settings import FPS, WIDTH, HEIGHT, TITLE, BG_COLOR
+from scripts.utils.EventHandler import EventHandler
 
 class StartGame:
 
@@ -59,7 +60,8 @@ class StartGame:
                 self.scene = "menu"
                 self.current_scene = Menu()
 
-            for event in pygame.event.get():
+            EventHandler.poll_events()
+            for event in EventHandler.events:
 
                 if event.type == pygame.QUIT:
 

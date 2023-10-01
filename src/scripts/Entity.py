@@ -40,7 +40,7 @@ class Entity(pygame.sprite.Sprite):
 
         self.mass = 1
 
-        self.jump_force: int = 16
+        self.jump_force: int = 32
 
         self.touching_ground: bool = False
 
@@ -52,15 +52,7 @@ class Entity(pygame.sprite.Sprite):
 
     def move(self):
 
-        if self.touching_ground:
-
-            self.gravitacional_force = 0
-
-        elif not(self.touching_ground):
-
-            self.gravitacional_force = GRAVITY * self.mass
-
-            self.direction.y += self.gravitacional_force
+        self.direction.y += self.gravitacional_force
         
         # Determines a terminal velocity to avoid physics problem, and the risk of creating portals to another worlds and this kind of stuff
 

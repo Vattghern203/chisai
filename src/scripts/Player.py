@@ -1,6 +1,8 @@
-from typing import List, Literal
+from typing import List
 import pygame
 from scripts.Entity import Entity
+
+from scripts.utils.EventHandler import EventHandler
 
 class Player(Entity):
 
@@ -14,13 +16,14 @@ class Player(Entity):
 
         super().__init__(position, sprite_path, groups, parameters)
 
-        self.speed: int = 6
+        self.speed: int = 3
         
-        self.mass: float | int = 1
+        self.mass: float | int = 10
 
         # Group Related
 
         self.block_group = parameters['block_group']
+        self.collision_group = parameters["collision_group"]
 
 
     def input(self):
@@ -31,20 +34,25 @@ class Player(Entity):
 
         if keys[pygame.K_a]:
             move_x = -1
+
         elif keys[pygame.K_d]:
             move_x = 1
 
         if keys[pygame.K_w]:
             move_y = -1
+
         elif keys[pygame.K_s]:
             move_y = 1
 
-        if keys[pygame.K_SPACE]:
-            self.direction.y -= self.jump_force
+        if self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE):
+            
+            self.touching_ground = False
+
+            move_y = -self.jump_force
+
 
         self.direction.x = move_x
         self.direction.y = move_y
-
 
 
     def collision_math(self, rect):
@@ -79,18 +87,9 @@ class Player(Entity):
             self.direction.y = 0
 
 
-    def handle_collision_y(self):
+    def handle_collision(self):
 
-        for block in self.block_group:
-
-            if block.rect.colliderect(self.rect):
-
-                self.collision_math(block.rect)
-
-
-    def handle_collision_x(self):
-
-        for block in self.block_group:
+        for block in self.collision_group:
 
             if block.rect.colliderect(self.rect):
 
@@ -101,17 +100,11 @@ class Player(Entity):
 
         self.handle_orientation()
 
-        if self.orientation == "horizontal":
-
-            self.handle_collision_x()
-
-        if self.orientation == "vertical":
-
-            self.handle_collision_y()
+        self.handle_collision()
 
 
     def update(self):
 
+        self.input()
         self.move()
         self.handle_physics()
-        self.input()
