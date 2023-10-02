@@ -25,13 +25,13 @@ class Cutscene(Scene):
             clock.tick(4500)
             success, img = cap.read()
 
-            if success:
-                for event in pygame.event.get():
+            for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         success = False
+                        pygame.quit()
 
-                    elif event.type == pygame.K_SPACE:
-                        success = False
+            if success:
+
                 wn.blit(pygame.image.frombuffer(img.tobytes(), shape, "BGR"), (0, 0))
                 pygame.display.update()
                 if cv2.waitKey(1) & 0xFF == ord('q'):
