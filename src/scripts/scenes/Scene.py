@@ -22,11 +22,11 @@ class Scene:
 
     def draw(self):
 
-        self.all_sprites.draw(self.display)
         self.display.fill(BG_COLOR)
+        self.fade.draw()
+        self.all_sprites.draw(self.display)
 
     def update(self):
         
-        self.fade.draw()
         self.all_sprites.update()
         

@@ -16,7 +16,7 @@ class Player(Entity):
 
         super().__init__(position, sprite_path, groups, parameters)
 
-        self.speed: int = 3
+        self.speed: int = 6
         
         self.mass: float | int = 10
 
@@ -38,17 +38,14 @@ class Player(Entity):
         elif keys[pygame.K_d]:
             move_x = 1
 
-        if keys[pygame.K_w]:
-            move_y = -1
-
-        elif keys[pygame.K_s]:
+        if keys[pygame.K_s]:
             move_y = 1
 
         if self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE):
             
             self.touching_ground = False
 
-            move_y = -self.jump_force
+            move_y -= self.jump_force
 
 
         self.direction.x = move_x
@@ -99,7 +96,7 @@ class Player(Entity):
     def handle_physics(self):
 
         self.handle_orientation()
-
+        #self.handle_sprite_flip()
         self.handle_collision()
 
 
@@ -108,3 +105,4 @@ class Player(Entity):
         self.input()
         self.move()
         self.handle_physics()
+        super().update()

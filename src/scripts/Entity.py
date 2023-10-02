@@ -23,11 +23,17 @@ class Entity(pygame.sprite.Sprite):
         self.position: List[float | int] = position
 
         # Sprite ----------------------------------------
+        self.orientation: Literal["horizontal", "vertical"] = "vertical"
+
+        self.sprite_orientation: dict = {
+            "left": False,
+            "right": True,
+            "top": False,
+            "bottom": False
+        }
 
         self.image = pygame.transform.scale(pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
         self.all_sprites = groups
-
-        self.orientation: Literal["horizontal", "vertical"] = "vertical"
 
         self.rect = self.image.get_rect(topleft=position)
 
@@ -38,9 +44,9 @@ class Entity(pygame.sprite.Sprite):
 
         # Physics ----------------------------------------
 
-        self.mass = 1
+        self.mass = 2
 
-        self.jump_force: int = 32
+        self.jump_force: int = 20
 
         self.touching_ground: bool = False
 
@@ -80,11 +86,21 @@ class GenericEntity(pygame.sprite.Sprite):
     def __init__(
             self, 
             groups:pygame.sprite.Group, 
-            image = pygame.Surface((TILE_SIZE, TILE_SIZE)), 
+            image = pygame.Surface((TILE_SIZE, TILE_SIZE)),
+            sprite_path = None,
             position = (HEIGHT, 0)
         ):
-
+        
         super().__init__(groups)
 
-        self.image = image
+        if sprite_path:
+
+            self.image = pygame.transform.scale(
+                pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE)
+            )
+
+        else:
+
+            self.image = image
+
         self.rect = self.image.get_rect(topleft=position)

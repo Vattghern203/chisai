@@ -86,6 +86,7 @@ class Enemy(Entity):
 
 
     def update(self):
+        self.handle_orientation()
         self.handle_behavior()
         # Implement any additional logic for the enemy's behavior
 

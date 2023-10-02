@@ -74,9 +74,8 @@ class StartGame:
 
                 self.current_scene.events(event)
 
-            self.clock.tick(self.target_fps)
-
-            self.current_scene.draw()
-            self.current_scene.update()
 
             pygame.display.flip()            
+            self.current_scene.draw()
+            self.current_scene.update()
+            self.clock.tick(self.target_fps)

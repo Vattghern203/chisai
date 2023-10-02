@@ -41,7 +41,7 @@ class Game(Scene):
             behavior="walk_lr",
         )
 
-        self.enemy_up = Enemy(
+        Enemy(
             position=(400, 400), 
             sprite_path="src/assets/sprites/enemy/enemy.png", 
             groups=[self.all_sprites, self.enemy_sprites, self.collision_group],  
@@ -66,6 +66,8 @@ class Game(Scene):
                     self.collision_group
                 ],
 
+                sprite_path="src/assets/textures/grass.png",
+
                 position = (
                     TILE_SIZE * i, (HEIGHT - TILE_SIZE)
                 )
@@ -73,11 +75,8 @@ class Game(Scene):
 
     def draw(self):
 
-        super().draw()
-
-        self.all_sprites.draw(self.display)
+        return super().draw()
 
     def update(self):
 
-        self.player.update()
-        self.all_sprites.update()
+        return super().update()

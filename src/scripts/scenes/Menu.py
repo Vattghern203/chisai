@@ -35,4 +35,4 @@ class Menu(Scene):
         self.all_sprites.draw(self.display)
 
     def update(self):
-        self.all_sprites.update()
+        return super().update()
