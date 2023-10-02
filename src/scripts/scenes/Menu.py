@@ -18,10 +18,10 @@ class Menu(Scene):
         self.music_path = "src/assets/music/when it's dark out.mp3"
         self.music_player.play_music(self.music_path) 
 
-        play_button = Button("src/assets/imgs/ui/play_btn.png", (200, 300), self.next_scene)
-        quit_button = Button("src/assets/imgs/ui/quit_btn.png", (200, 400), self.quit_game)
+        self.play_button = Button("src/assets/imgs/ui/play_btn.png",64, 380, self.next_scene)
+        self.quit_button = Button("src/assets/imgs/ui/quit_btn.png", 64, 500, self.quit_game)
 
-        self.all_sprites.add(play_button, quit_button)
+        self.all_sprites.add(self.play_button, self.quit_button)
 
         # Additional initialization for the menu
 
@@ -33,8 +33,9 @@ class Menu(Scene):
         sys.exit()
 
     def events(self, event):
-        for sprite in self.all_sprites:
-            sprite.handle_event(event)
+        self.quit_button.events(event)
+        self.play_button.events(event)
+        return super().events(event)
 
     def draw(self):
         super().draw()

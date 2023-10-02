@@ -1,9 +1,14 @@
 import pygame
 
-class Button:
-    def __init__(self, image_normal, image_hover, x, y, call_back):
+from scripts.elements.Object import Object
+
+class Button(Object):
+    def __init__(self, image_normal, x, y, call_back):
+
+        super().__init__(image_normal, [x, y])
+
         self.display = pygame.display.get_surface()
-        self.image_normal = pygame.image.load(image_normal)
+        self.image_normal = pygame.transform.scale(pygame.image.load(image_normal).convert_alpha(), (256, 144))
         self.image = self.image_normal
         self.rect = self.image.get_rect(topleft=(x, y))
         self.call_back = call_back
@@ -11,7 +16,7 @@ class Button:
     def events(self, event):
         if event.type == pygame.MOUSEMOTION:
             if self.rect.collidepoint(event.pos):
-                self.image = self.image_hover
+                self.image = self.image_normal
             else:
                 self.image = self.image_normal
 
