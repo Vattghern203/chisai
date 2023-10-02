@@ -5,6 +5,7 @@ from typing import Literal
 from scripts.scenes.Menu import Menu
 from scripts.scenes.Game import Game
 from scripts.scenes.GameOver import GameOver
+from scripts.scenes.Cutscenes import Cutscene
 
 import sys
 
@@ -33,8 +34,8 @@ class StartGame:
         self.target_fps = FPS
 
         # All possible scenarios
-        self.scene: Literal["menu", "game", "gameover"] = "game"
-        self.current_scene = Game()
+        self.scene: Literal["menu","cutscene", "game", "gameover"] = "cutscene"
+        self.current_scene = Cutscene()
 
 
     # Game Loop
@@ -45,6 +46,12 @@ class StartGame:
         while self.running:
 
             if self.scene == "menu" and self.current_scene.active == False:
+                self.scene = "cutscene"
+
+                self.current_scene = Cutscene()
+
+            elif self.scene == "cutscene" and self.current_scene.active == False:
+
                 self.scene = "game"
 
                 self.current_scene = Game()
