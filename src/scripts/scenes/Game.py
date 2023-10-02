@@ -48,6 +48,13 @@ class Game(Scene):
             behavior="walk_td",
         )
 
+        Enemy(
+            position=(600, 600), 
+            sprite_path="src/assets/sprites/enemy/enemy.png", 
+            groups=[self.all_sprites, self.enemy_sprites, self.collision_group],  
+            behavior="walk_lr",
+        )
+
         self.generate_terrain()
 
     def events(self, event):

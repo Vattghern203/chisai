@@ -24,6 +24,10 @@ class Player(Entity):
 
         self.block_group = parameters['block_group']
         self.collision_group = parameters["collision_group"]
+        self.enemy_group = parameters["enemy_sprites"]
+
+        self.attack_duration = 0
+        self.attacking = False
 
 
     def input(self):
@@ -40,6 +44,10 @@ class Player(Entity):
 
         if keys[pygame.K_s]:
             move_y = 1
+
+        if keys[pygame.K_e]:
+
+            self.handle_attack()
 
         if self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE):
             
@@ -93,14 +101,53 @@ class Player(Entity):
                 self.collision_math(block.rect)
 
 
+    def handle_collision_with_enemy(self):
+
+        for sprite in self.enemy_group:
+
+            if sprite.rect.colliderect(self.rect):
+
+                self.collision_math(sprite.rect)
+
+                if self.attacking:
+
+                    print(sprite)
+
+                    sprite.kill()
+
+                else:
+
+                    self.kill()
+
+                print("Dont touch me!")
+
+
+    def handle_attack(self):
+
+        print('attacking')
+
+        self.attack_duration = 10
+
+        self.attacking = True
+
+
     def handle_physics(self):
 
         self.handle_orientation()
         #self.handle_sprite_flip()
         self.handle_collision()
+        self.handle_collision_with_enemy()
 
 
     def update(self):
+
+
+
+        self.attack_duration -= 1
+
+        if self.attack_duration == 0:
+
+            self.attacking = False
 
         self.input()
         self.move()
