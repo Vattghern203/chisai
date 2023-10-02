@@ -1,17 +1,22 @@
 import pygame
 from scripts.settings import WIDTH, HEIGHT
+from scripts.Player import Player
 
 class Camera(pygame.sprite.Group):
 
     def __init__(self):
         super().__init__()
-        self.display = pygame.display.get_surface()
-        self.offset = pygame.math.Vector2()
+        
+        def draw(self, target: Player, display: pygame.SurfaceType):
 
-    def custom_draw(self, player):
-        self.offset.x = player.rect.centerx - WIDTH /2
-        self.offset.y = player.rect.centery - HEIGHT / 2
-        for sprite in self.sprites():
-            off_rect = sprite.rect.copy()
-            off_rect.center -= self.offset
-            self.display.blit(sprite.image, off_rect)
+            offset = pygame.math.Vector2()
+            offset.x = display.get_width() / 2 - target.rect.centerx
+            offset.y = display.get_height() / 2 - target.rect.centery
+
+            for sprite in self.sprites():
+
+                sprite_offset = pygame.math.Vector2()
+                sprite_offset.x = offset.x + sprite.rect.x
+                sprite_offset.y = offset.y + sprite.rect.y
+
+                display.blit(sprite.image, sprite_offset)
