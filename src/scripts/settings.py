@@ -17,6 +17,11 @@ TILE_SIZE = 64
 
 TITLE = "Eu era um gamer ordinário até ser atropelado por um caminhão e me tornar um herói"
 
+# Components
+
+BUTTON_HEIGHT = 144
+BUTTON_WIDTH = 256
+
 # Death Messages
 
 DEATH_MESSAGE = [

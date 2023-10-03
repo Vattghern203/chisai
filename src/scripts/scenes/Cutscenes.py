@@ -4,6 +4,7 @@ from scripts.scenes.Scene import Scene
 from scripts.elements.Object import Object
 from scripts.utils.Music import MusicPlayer
 from scripts.StartGame import *
+import pygame.locals as pg_locals
 
 import sys
 
@@ -26,12 +27,15 @@ class Cutscene(Scene):
             success, img = cap.read()
 
             for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        success = False
-                        pygame.quit()
+                if event.type == pygame.QUIT:
+                    success = False
+                    pygame.quit()
+
+            keys = pygame.key.get_pressed()
+            if keys[pg_locals.K_ESCAPE]:
+                break
 
             if success:
-
                 wn.blit(pygame.image.frombuffer(img.tobytes(), shape, "BGR"), (0, 0))
                 pygame.display.update()
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -39,8 +43,4 @@ class Cutscene(Scene):
             else:
                 break
 
-            
-            self.active = False
-            
-
-        
+        self.active = False

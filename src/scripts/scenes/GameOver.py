@@ -3,7 +3,7 @@ from scripts.scenes.Scene import Scene
 from scripts.utils.fade import Fade
 from scripts.elements.button import Button
 
-from scripts.settings import HEIGHT, WIDTH
+from scripts.settings import HEIGHT, WIDTH, BUTTON_HEIGHT, BUTTON_WIDTH
 
 from scripts.utils.Text import Text
 from scripts.utils.Music import MusicPlayer
@@ -22,7 +22,7 @@ class GameOver(Scene):
 
         self.text = Text(self.handle_death_text(), font_size=64, text_color=(255, 50, 50))
 
-        self.play_button = Button("src/assets/imgs/ui/play_again_btn.png", WIDTH - self.play_button.rect.width  // 2, HEIGHT - self.play_button.rect.height // 2, self.next_scene)
+        self.play_button = Button("src/assets/imgs/ui/play_again_btn.png", ((WIDTH - BUTTON_WIDTH) // 2), ((HEIGHT - BUTTON_HEIGHT) // 1.5), self.next_scene)
 
         # Additional initialization for the game over screen
         self.music_player = MusicPlayer()
