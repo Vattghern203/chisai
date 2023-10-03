@@ -81,6 +81,25 @@ class Entity(pygame.sprite.Sprite):
             self.orientation = "vertical"
 
 
+    def collision_math(self, rect):
+        overlap_x = min(self.rect.right, rect.right) - max(self.rect.left, rect.left)
+        overlap_y = min(self.rect.bottom, rect.bottom) - max(self.rect.top, rect.top)
+
+        if overlap_x < overlap_y:
+            if self.rect.left < rect.left and self.direction.x > 0:
+                self.rect.right = rect.left
+            elif self.rect.right > rect.right and self.direction.x < 0:
+                self.rect.left = rect.right
+            self.direction.x = 0
+        else:
+            if self.rect.top < rect.top and self.direction.y > 0:
+                self.rect.bottom = rect.top
+                self.touching_ground = True
+            elif self.rect.bottom > rect.bottom and self.direction.y < 0:
+                self.rect.top = rect.bottom
+            self.direction.y = 0
+
+
 class GenericEntity(pygame.sprite.Sprite):
 
     def __init__(

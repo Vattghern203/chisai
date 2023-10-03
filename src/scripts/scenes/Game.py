@@ -8,6 +8,7 @@ from scripts.scenes.Scene import Scene
 from scripts.settings import HEIGHT, TILE_SIZE, WIDTH
 from scripts.utils.Music import MusicPlayer
 from scripts.utils.Sound import SoundPlayer
+from scripts.Boss import Boss
 
 import time
 
@@ -21,6 +22,7 @@ class Game(Scene):
 
         self.enemy_sprites = pygame.sprite.Group()
         self.collision_group = pygame.sprite.Group()
+        self.boss_group = pygame.sprite.GroupSingle()
 
         self.sound_player = SoundPlayer()
 
@@ -31,6 +33,8 @@ class Game(Scene):
         self.enemy_spawn_timer = 0
         self.spawn_interval = random.randint(200, 400)  # Initial spawn interval (adjust as needed)
 
+        self.minion_counter = 10
+
         self.player = Player(
             position=[WIDTH / 10, HEIGHT / 2],
             sprite_path="src/assets/sprites/hero/hero.png",
@@ -38,7 +42,9 @@ class Game(Scene):
             parameters={
                 'block_group': self.block_group,
                 'collision_group': self.collision_group,
-                'enemy_sprites': self.enemy_sprites
+                'enemy_sprites': self.enemy_sprites,
+                'boss_group': self.boss_group,
+                "minion_counter": self.minion_counter
             },
         )
 
@@ -86,12 +92,45 @@ class Game(Scene):
     def spawn_enemy(self):
         # Create a new enemy instance and add it to the groups
 
-        Enemy(
-            position=(random.randint(100, WIDTH - 666), random.randint(100, HEIGHT - 100)),
-            sprite_path="src/assets/sprites/enemy/enemy.png",
-            groups=[self.all_sprites, self.enemy_sprites, self.collision_group],
-            behavior="walk_lr",
-        )
+        print('from game', self.minion_counter)
+
+        self.minion_counter -= 1
+
+        if self.minion_counter == 5:
+
+            print('boss time')
+            self.boss = Boss(
+                position=(random.randint(100, WIDTH - 666), random.randint(100, HEIGHT - 100)),
+
+                sprite_path="src/assets/sprites/enemy/boss.png",
+
+                groups=[
+                    self.all_sprites,
+                    self.boss_group,
+                ],
+
+                parameters={
+                    "block_group": self.block_group,
+                    "collision_group": self.collision_group,
+                    "player": self.player
+                }
+            )
+
+            self.sound_player.play_sound("src/assets/sounds/boss.wav")
+
+        
+        if self.minion_counter > 5:
+
+            self.sound_player.play_sound("src/assets/sounds/spawn.wav")
+
+            Enemy(
+                position=(random.randint(100, WIDTH - 666), random.randint(100, HEIGHT - 100)),
+                sprite_path="src/assets/sprites/enemy/enemy.png",
+                groups=[self.all_sprites, self.enemy_sprites, self.collision_group],
+                behavior="walk_lr",
+            )
+
+        
 
     def generate_terrain(self):
         for i in range(20):

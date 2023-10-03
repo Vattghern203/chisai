@@ -15,7 +15,7 @@ class Player(Entity):
         self.speed: int = 6
         self.alive: bool = True
         self.mass: float | int = 10
-        self.health = 2
+        self.health = 5
 
         # Group Related
         self.block_group = parameters['block_group']
@@ -26,6 +26,8 @@ class Player(Entity):
         self.attacking = False
         self.attack_cooldown = 0
         self.attack_cooldown_duration = 30  # Adjust as needed
+
+        self.minion_counter = parameters["minion_counter"]
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -50,24 +52,6 @@ class Player(Entity):
         self.direction.x = move_x
         self.direction.y = move_y
 
-    def collision_math(self, rect):
-        overlap_x = min(self.rect.right, rect.right) - max(self.rect.left, rect.left)
-        overlap_y = min(self.rect.bottom, rect.bottom) - max(self.rect.top, rect.top)
-
-        if overlap_x < overlap_y:
-            if self.rect.left < rect.left and self.direction.x > 0:
-                self.rect.right = rect.left
-            elif self.rect.right > rect.right and self.direction.x < 0:
-                self.rect.left = rect.right
-            self.direction.x = 0
-        else:
-            if self.rect.top < rect.top and self.direction.y > 0:
-                self.rect.bottom = rect.top
-                self.touching_ground = True
-            elif self.rect.bottom > rect.bottom and self.direction.y < 0:
-                self.rect.top = rect.bottom
-            self.direction.y = 0
-
     def handle_collision(self):
         for block in self.collision_group:
             if block.rect.colliderect(self.rect):
@@ -80,6 +64,11 @@ class Player(Entity):
                 if self.attacking:
                     print('Hitted', sprite)
                     sprite.kill()
+
+                    self.minion_counter -= 1
+
+                    print(self.minion_counter, 'remaining')
+
                 else:
                     self.health -= 1
                     self.rect.x += 50
