@@ -1,44 +1,39 @@
-from typing import List
 import pygame
+from typing import List
 from scripts.Entity import Entity
-
 from scripts.utils.EventHandler import EventHandler
 
 class Player(Entity):
-
     def __init__(
-            self, 
-            position:List[int], 
-            sprite_path:str, 
-            groups:pygame.sprite.Group(), 
+            self,
+            position: List[int],
+            sprite_path: str,
+            groups: pygame.sprite.Group(),
             parameters: dict = {}
-        ):
-
+    ):
         super().__init__(position, sprite_path, groups, parameters)
-
         self.speed: int = 6
-        
+        self.alive: bool = True
         self.mass: float | int = 10
+        self.health = 2
 
         # Group Related
-
         self.block_group = parameters['block_group']
         self.collision_group = parameters["collision_group"]
         self.enemy_group = parameters["enemy_sprites"]
 
         self.attack_duration = 0
         self.attacking = False
-
+        self.attack_cooldown = 0
+        self.attack_cooldown_duration = 30  # Adjust as needed
 
     def input(self):
         keys = pygame.key.get_pressed()
-
         move_x = 0
         move_y = 0
 
         if keys[pygame.K_a]:
             move_x = -1
-
         elif keys[pygame.K_d]:
             move_x = 1
 
@@ -46,107 +41,71 @@ class Player(Entity):
             move_y = 1
 
         if keys[pygame.K_e]:
-
             self.handle_attack()
 
         if self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE):
-            
             self.touching_ground = False
-
             move_y -= self.jump_force
-
 
         self.direction.x = move_x
         self.direction.y = move_y
 
-
     def collision_math(self, rect):
         overlap_x = min(self.rect.right, rect.right) - max(self.rect.left, rect.left)
-
         overlap_y = min(self.rect.bottom, rect.bottom) - max(self.rect.top, rect.top)
 
         if overlap_x < overlap_y:
-
             if self.rect.left < rect.left and self.direction.x > 0:
-
                 self.rect.right = rect.left
-
             elif self.rect.right > rect.right and self.direction.x < 0:
-
                 self.rect.left = rect.right
-
             self.direction.x = 0
-
         else:
-
             if self.rect.top < rect.top and self.direction.y > 0:
-
                 self.rect.bottom = rect.top
-
                 self.touching_ground = True
-
             elif self.rect.bottom > rect.bottom and self.direction.y < 0:
-
                 self.rect.top = rect.bottom
-
             self.direction.y = 0
 
-
     def handle_collision(self):
-
         for block in self.collision_group:
-
             if block.rect.colliderect(self.rect):
-
                 self.collision_math(block.rect)
 
-
     def handle_collision_with_enemy(self):
-
         for sprite in self.enemy_group:
-
             if sprite.rect.colliderect(self.rect):
-
                 self.collision_math(sprite.rect)
-
                 if self.attacking:
-
-                    print(sprite)
-
+                    print('Hitted', sprite)
                     sprite.kill()
-
                 else:
-
-                    self.kill()
-
-                print("Dont touch me!")
-
+                    self.health -= 1
+                    self.rect.x += 50
+                    self.rect.y -= 30
+                    print("Don't touch me!")
+                    print(self.health)
 
     def handle_attack(self):
+        if not self.attacking and self.attack_cooldown <= 0:
+            self.attacking = True
+            self.attack_duration = 20  # Adjust the duration of the attack animation
 
-        print('attacking')
+            # Play attack animation and sound effects here
 
-        self.attack_duration = 10
-
-        self.attacking = True
-
+            self.attack_cooldown = self.attack_cooldown_duration
 
     def handle_physics(self):
-
         self.handle_orientation()
-        #self.handle_sprite_flip()
+        # self.handle_sprite_flip()
         self.handle_collision()
         self.handle_collision_with_enemy()
 
-
     def update(self):
-
-
-
+        self.attack_cooldown -= 1
         self.attack_duration -= 1
-
         if self.attack_duration == 0:
-
             self.attacking = False
 
         self.input()

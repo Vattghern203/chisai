@@ -34,8 +34,8 @@ class StartGame:
         self.target_fps = FPS
 
         # All possible scenarios
-        self.scene: Literal["menu","cutscene", "game", "gameover"] = "game"
-        self.current_scene = Game()
+        self.scene: Literal["menu","cutscene", "game", "gameover"] = "menu"
+        self.current_scene = Menu()
 
 
     # Game Loop
@@ -64,8 +64,8 @@ class StartGame:
 
             elif self.scene == "gameover" and self.current_scene.active == False:
 
-                self.scene = "menu"
-                self.current_scene = Menu()
+                self.scene = "game"
+                self.current_scene = Game()
 
             EventHandler.poll_events()
             for event in EventHandler.events:

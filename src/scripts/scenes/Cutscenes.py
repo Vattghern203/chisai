@@ -22,7 +22,7 @@ class Cutscene(Scene):
         clock = pygame.time.Clock()
 
         while(cap.isOpened()):
-            clock.tick(4500)
+            clock.tick(15000)
             success, img = cap.read()
 
             for event in pygame.event.get():
