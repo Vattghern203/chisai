@@ -19,6 +19,8 @@ class Boss(Entity):
 
         self.image = pygame.transform.scale(
             pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE * 4, TILE_SIZE * 4))
+        
+        print(self.rect)
 
         self.speed = 5  # Adjust speed as needed
         self.health = 10  # Adjust health as needed
@@ -31,7 +33,7 @@ class Boss(Entity):
         self.collision_group = parameters["collision_group"]
 
     def apply_gravity(self):
-        self.direction.y += GRAVITY
+        self.direction.y -= self.gravitacional_force
         self.rect.move_ip(0, self.direction.y)
 
     def handle_collision(self):

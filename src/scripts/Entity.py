@@ -6,15 +6,16 @@ from scripts.settings import HEIGHT, TILE_SIZE, GRAVITY, TERMINAL_VELOCITY
 
 # Entity represents a moving character
 
+
 class Entity(pygame.sprite.Sprite):
 
     def __init__(
-                self, 
-                position:List[float | int], 
-                sprite_path:str, 
-                groups,
-                parameters: dict = {}
-            ):
+        self,
+        position: List[float | int],
+        sprite_path: str,
+        groups,
+        parameters: dict = {}
+    ):
 
         super().__init__(groups)
 
@@ -32,7 +33,9 @@ class Entity(pygame.sprite.Sprite):
             "bottom": False
         }
 
-        self.image = pygame.transform.scale(pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
+        self.image = pygame.transform.scale(pygame.image.load(
+            sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
+
         self.all_sprites = groups
 
         self.rect = self.image.get_rect(topleft=position)
@@ -59,7 +62,7 @@ class Entity(pygame.sprite.Sprite):
     def move(self):
 
         self.direction.y += self.gravitacional_force
-        
+
         # Determines a terminal velocity to avoid physics problem, and the risk of creating portals to another worlds and this kind of stuff
 
         if self.direction.y > self.terminal_velocity:
@@ -80,12 +83,12 @@ class Entity(pygame.sprite.Sprite):
 
             self.orientation = "vertical"
 
-
     def collision_math(self, rect):
         overlap_x = min(self.rect.right, rect.right) - max(self.rect.left, rect.left)
         overlap_y = min(self.rect.bottom, rect.bottom) - max(self.rect.top, rect.top)
 
         if overlap_x < overlap_y:
+            
             if self.rect.left < rect.left and self.direction.x > 0:
                 self.rect.right = rect.left
             elif self.rect.right > rect.right and self.direction.x < 0:
@@ -103,19 +106,20 @@ class Entity(pygame.sprite.Sprite):
 class GenericEntity(pygame.sprite.Sprite):
 
     def __init__(
-            self, 
-            groups:pygame.sprite.Group, 
-            image = pygame.Surface((TILE_SIZE, TILE_SIZE)),
-            sprite_path = None,
-            position = (HEIGHT, 0)
-        ):
-        
+        self,
+        groups: pygame.sprite.Group,
+        image=pygame.Surface((TILE_SIZE, TILE_SIZE)),
+        sprite_path=None,
+        position=(HEIGHT, 0)
+    ):
+
         super().__init__(groups)
 
         if sprite_path:
 
             self.image = pygame.transform.scale(
-                pygame.image.load(sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE)
+                pygame.image.load(
+                    sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE)
             )
 
         else:
