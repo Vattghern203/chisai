@@ -57,7 +57,7 @@ class Entity(pygame.sprite.Sprite):
 
         self.gravitacional_force: float | int = GRAVITY * self.mass
 
-        self.health: 2
+        self.health: 1
 
     def move(self):
 
@@ -88,7 +88,7 @@ class Entity(pygame.sprite.Sprite):
         overlap_y = min(self.rect.bottom, rect.bottom) - max(self.rect.top, rect.top)
 
         if overlap_x < overlap_y:
-            
+
             if self.rect.left < rect.left and self.direction.x > 0:
                 self.rect.right = rect.left
             elif self.rect.right > rect.right and self.direction.x < 0:

@@ -35,18 +35,6 @@ class Enemy(Entity):
             self.move()
         elif self.behavior == "walk_td":
             self.move_up_down()
-        elif self.behavior == "shoot":
-            # Add the code for shooting behavior here
-            pass
-        elif self.behavior == "follow":
-            # Add the code for following behavior here
-            pass
-        elif self.behavior == "jump":
-            # Add the code for jumping behavior here
-            pass
-        elif self.behavior == "explode":
-            # Add the code for exploding behavior here
-            pass
         
 
     def move(self):

@@ -98,14 +98,17 @@ class Game(Scene):
 
         if self.minion_counter == 5:
 
+
+
             print('boss time')
             self.boss = Boss(
-                position=(random.randint(100, WIDTH - 666), random.randint(100, HEIGHT - 100)),
+                position=(WIDTH // 2, HEIGHT // 2),
 
                 sprite_path="src/assets/sprites/enemy/boss.png",
 
                 groups=[
                     self.all_sprites,
+                    self.enemy_sprites,
                     self.boss_group,
                 ],
 
@@ -115,6 +118,8 @@ class Game(Scene):
                     "player": self.player
                 }
             )
+
+            print(self.boss.rect.x, self.boss.rect.y)
 
             self.sound_player.play_sound("src/assets/sounds/boss.wav")
 
@@ -160,3 +165,5 @@ class Game(Scene):
             # Reset the timer and generate a new spawn interval
             self.enemy_spawn_timer = 0
             self.spawn_interval = random.randint(200, 400)  # Adjust the range as needed
+
+        
