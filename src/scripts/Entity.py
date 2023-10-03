@@ -46,7 +46,7 @@ class Entity(pygame.sprite.Sprite):
 
         self.mass = 2
 
-        self.jump_force: int = 20
+        self.jump_force: int = 24
 
         self.touching_ground: bool = False
 
@@ -54,7 +54,7 @@ class Entity(pygame.sprite.Sprite):
 
         self.gravitacional_force: float | int = GRAVITY * self.mass
 
-        self.health: int = 5
+        self.health: 2
 
     def move(self):
 
