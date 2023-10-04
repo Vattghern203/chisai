@@ -50,6 +50,23 @@ class Game(Scene):
             },
         )
 
+        self.boss = Boss(
+                position=(WIDTH, 0),
+
+                sprite_path="src/assets/sprites/enemy/boss.png",
+
+                groups=[
+                    self.boss_group,
+                    self.enemy_sprites
+                ],
+
+                parameters={
+                    "block_group": self.block_group,
+                    "collision_group": self.collision_group,
+                    "player": self.player
+                }
+            )
+
         self.generate_terrain()
 
 
@@ -101,30 +118,11 @@ class Game(Scene):
 
             print('boss time')
 
-            self.boss = Boss(
-                position=(WIDTH, 0),
-
-                sprite_path="src/assets/sprites/enemy/boss.png",
-
-                groups=[
-                    self.all_sprites,
-                    self.boss_group,
-                    self.enemy_sprites
-                ],
-
-                parameters={
-                    "block_group": self.block_group,
-                    "collision_group": self.collision_group,
-                    "player": self.player
-                }
-            )
+            self.all_sprites.add(self.boss)
 
             print(self.boss.rect.x, self.boss.rect.y)
 
             self.sound_player.play_sound("src/assets/sounds/boss.wav")
-
-            
-
         
         if self.minion_counter > 5:
 
@@ -139,14 +137,17 @@ class Game(Scene):
 
     def handle_end_of_scene(self):
 
-        if self.active == False or not(self.player.alive):
+        if self.boss.alive == False or self.player.alive == False:
 
             self.music_player.stop_music()
-            self.sound_player.stop_sound()
+            #self.sound_player.stop_sound()
+            pygame.mixer.stop()
 
 
     def generate_terrain(self):
+
         for i in range(20):
+
             GenericEntity(
                 [
                     self.all_sprites,
@@ -160,6 +161,11 @@ class Game(Scene):
             )
 
     def update(self):
+
+        print(self.boss.alive)
+
+        self.display.blit(self.boss.mask_image, (0, 0))
+
         super().update()
 
         self.gameover()

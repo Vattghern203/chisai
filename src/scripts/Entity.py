@@ -4,6 +4,9 @@ import pygame
 
 from scripts.settings import HEIGHT, TILE_SIZE, GRAVITY, TERMINAL_VELOCITY
 
+import math
+
+
 class Entity(pygame.sprite.Sprite):
 
     def __init__(
@@ -21,6 +24,7 @@ class Entity(pygame.sprite.Sprite):
         self.position: List[float | int] = position
 
         # Sprite ----------------------------------------
+
         self.orientation: Literal["horizontal", "vertical"] = "vertical"
 
         self.sprite_orientation: dict = {
@@ -32,6 +36,9 @@ class Entity(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load(
             sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
+        
+        self.mask = pygame.mask.from_surface(self.image)
+        self.mask_image = self.mask.to_surface()
 
         self.all_sprites = groups
 
@@ -81,15 +88,29 @@ class Entity(pygame.sprite.Sprite):
             self.orientation = "vertical"
 
         if self.direction.x > 0:
+
             self.sprite_orientation["left"] = False
+
             self.sprite_orientation["right"] = True
+
         elif self.direction.x < 0:
+
             self.sprite_orientation["left"] = True
+
             self.sprite_orientation["right"] = False
 
+        self.flip_sprite()    
+
+    def flip_sprite(self):
+
+        if self.sprite_orientation["left"]:
+            self.image = pygame.transform.flip(self.image, True, False)
+
     def collision_math(self, rect):
-        overlap_x = min(self.rect.right, rect.right) - max(self.rect.left, rect.left)
-        overlap_y = min(self.rect.bottom, rect.bottom) - max(self.rect.top, rect.top)
+        overlap_x = min(self.rect.right, rect.right) - \
+            max(self.rect.left, rect.left)
+        overlap_y = min(self.rect.bottom, rect.bottom) - \
+            max(self.rect.top, rect.top)
 
         if overlap_x < overlap_y:
 
@@ -105,6 +126,15 @@ class Entity(pygame.sprite.Sprite):
             elif self.rect.bottom > rect.bottom and self.direction.y < 0:
                 self.rect.top = rect.bottom
             self.direction.y = 0
+
+    def distance_math(self, second_entity: pygame.Surface):
+
+        distance = math.sqrt(
+            (second_entity.rect.x - self.rect.x) ** 2 +
+            (second_entity.rect.y - self.rect.x) ** 2
+        )
+
+        print(distance)
 
 
 class GenericEntity(pygame.sprite.Sprite):

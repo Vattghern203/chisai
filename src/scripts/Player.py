@@ -28,11 +28,14 @@ class Player(Entity):
         self.invincibilty_frames: int = INVICIBILITY_FRAMES
 
         # Group Related
-        self.block_group = parameters['block_group']
-        self.collision_group = parameters["collision_group"]
-        self.enemy_group = parameters["enemy_sprites"]
-        self.minion_counter = parameters["minion_counter"]
-        self.boss_group = parameters["boss_group"]
+
+        if parameters:
+
+            self.block_group = parameters['block_group']
+            self.collision_group = parameters["collision_group"]
+            self.enemy_group = parameters["enemy_sprites"]
+            self.minion_counter = parameters["minion_counter"]
+            self.boss_group = parameters["boss_group"]
 
         # ATTACK
 
@@ -93,6 +96,19 @@ class Player(Entity):
         self.direction.x = move_x
         self.direction.y = move_y
 
+
+    def handle_dash(self):
+
+        print('dash')
+
+        if self.sprite_orientation["left"] and not self.sprite_orientation["right"]:
+
+            self.direction.x -= self.jump_force
+
+        else:
+
+            self.direction.x += self.jump_force
+
     
     #def handle_jump(self):
 
@@ -124,6 +140,7 @@ class Player(Entity):
                     if sprite.health == 0:
 
                         sprite.kill()
+                        sprite.alive = False
 
                     print(self.minion_counter, 'remaining')
 
@@ -145,6 +162,7 @@ class Player(Entity):
     # MOVIMENTATION
 
     def handle_jump(self):
+
         if self.touching_ground and EventHandler.keydown(pygame.K_SPACE):
             jump_direction = pygame.math.Vector2(0, -1).normalize()  # Upward direction
             self.direction.x += jump_direction.x * JUMP_FORCE

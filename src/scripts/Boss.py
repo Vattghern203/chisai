@@ -79,5 +79,6 @@ class Boss(Entity):
         self.handle_collision()
         self.move()
         self.follow_player()
+        self.distance_math(self.player)
 
         #super().update()
