@@ -3,7 +3,7 @@ import pygame
 from scripts.settings import BG_COLOR
 
 from scripts.utils.fade import Fade
-from scripts.utils.Music import MusicPlayer
+
 
 class Scene:
 

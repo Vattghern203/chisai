@@ -56,8 +56,11 @@ class Player(Entity):
         move_y = 0
 
         if keys[pygame.K_a]:
+
             move_x = -1
+
         elif keys[pygame.K_d]:
+
             move_x = 1
 
         if keys[pygame.K_s]:
@@ -99,15 +102,17 @@ class Player(Entity):
 
     def handle_dash(self):
 
+        
+
         print('dash')
 
         if self.sprite_orientation["left"] and not self.sprite_orientation["right"]:
 
-            self.direction.x -= self.jump_force
+            self.rect.x -= self.jump_force
 
         else:
 
-            self.direction.x += self.jump_force
+            self.rect.x += self.jump_force
 
     
     #def handle_jump(self):
@@ -147,7 +152,7 @@ class Player(Entity):
                 elif not(self.invincible):
 
                     self.health -= 1
-                    self.rect.x += TILE_SIZE
+                    self.rect.x += TILE_SIZE * 2
                     self.rect.y -= TILE_SIZE
 
                     self.invincible = True
