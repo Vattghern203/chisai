@@ -4,9 +4,6 @@ import pygame
 
 from scripts.settings import HEIGHT, TILE_SIZE, GRAVITY, TERMINAL_VELOCITY
 
-# Entity represents a moving character
-
-
 class Entity(pygame.sprite.Sprite):
 
     def __init__(
@@ -82,6 +79,13 @@ class Entity(pygame.sprite.Sprite):
         elif self.direction.y != 0:
 
             self.orientation = "vertical"
+
+        if self.direction.x > 0:
+            self.sprite_orientation["left"] = False
+            self.sprite_orientation["right"] = True
+        elif self.direction.x < 0:
+            self.sprite_orientation["left"] = True
+            self.sprite_orientation["right"] = False
 
     def collision_math(self, rect):
         overlap_x = min(self.rect.right, rect.right) - max(self.rect.left, rect.left)

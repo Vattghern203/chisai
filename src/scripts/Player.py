@@ -4,6 +4,10 @@ from scripts.Entity import Entity
 from scripts.utils.EventHandler import EventHandler
 from scripts.settings import TILE_SIZE, GRAVITY
 
+
+INVICIBILITY_FRAMES = 60
+JUMP_FORCE = 24
+
 class Player(Entity):
     def __init__(
             self,
@@ -13,10 +17,15 @@ class Player(Entity):
             parameters: dict = {}
     ):
         super().__init__(position, sprite_path, groups, parameters)
+
+        # STATS
+
         self.speed: int = 6
         self.alive: bool = True
         self.mass: float | int = 10
         self.health: int = 5
+        self.invincible: bool = False
+        self.invincibilty_frames: int = INVICIBILITY_FRAMES
 
         # Group Related
         self.block_group = parameters['block_group']
@@ -25,15 +34,17 @@ class Player(Entity):
         self.minion_counter = parameters["minion_counter"]
         self.boss_group = parameters["boss_group"]
 
+        # ATTACK
+
         self.attack_duration = 0
         self.attacking = False
         self.attack_cooldown = 0
-        self.attack_cooldown_duration = 30  # Adjust as needed
+        self.attack_cooldown_duration = 30
+
+        # JUMP
 
         self.jump_count = 0
         self.max_jump_count = 2
-
-
 
 
     def input(self):
@@ -48,6 +59,10 @@ class Player(Entity):
 
         if keys[pygame.K_s]:
             move_y = 1
+
+        if keys[pygame.K_LSHIFT]:
+
+            self.handle_dash()
 
         if keys[pygame.K_e]:
             self.handle_attack()
@@ -78,48 +93,98 @@ class Player(Entity):
         self.direction.x = move_x
         self.direction.y = move_y
 
+    
+    #def handle_jump(self):
+
     def handle_collision(self):
+
         for block in self.collision_group:
+
             if block.rect.colliderect(self.rect):
+
                 self.collision_math(block.rect)
 
+
     def handle_collision_with_enemy(self):
+
         for sprite in self.enemy_group:
+
             if sprite.rect.colliderect(self.rect):
+
                 self.collision_math(sprite.rect)
+
                 if self.attacking:
+
                     print('Hitted', sprite)
+
                     sprite.health -= 1
 
                     self.minion_counter -= 1
 
-                    if sprite.health <= 0:
+                    if sprite.health == 0:
 
                         sprite.kill()
 
                     print(self.minion_counter, 'remaining')
 
-                else:
+                elif not(self.invincible):
+
                     self.health -= 1
-                    self.rect.x += 50
-                    self.rect.y -= 30
+                    self.rect.x += TILE_SIZE
+                    self.rect.y -= TILE_SIZE
+
+                    self.invincible = True
+
+                    self.handle_invencibility()
+
                     print("Don't touch me!")
+
                     print(self.health)
 
+
+    # MOVIMENTATION
+
+    def handle_jump(self):
+        if self.touching_ground and EventHandler.keydown(pygame.K_SPACE):
+            jump_direction = pygame.math.Vector2(0, -1).normalize()  # Upward direction
+            self.direction.x += jump_direction.x * JUMP_FORCE
+            self.direction.y += jump_direction.y * JUMP_FORCE
+            self.touching_ground = False
+
+
     def handle_attack(self):
+
         if not self.attacking and self.attack_cooldown <= 0:
+
             self.attacking = True
+
             self.attack_duration = 20  # Adjust the duration of the attack animation
 
             # Play attack animation and sound effects here
 
             self.attack_cooldown = self.attack_cooldown_duration
 
+
+    def handle_invencibility(self):
+
+        if self.invincibilty_frames > 0 and self.invincible:
+
+            self.invincibilty_frames -= 1
+
+        if self.invincibilty_frames == 0:
+
+            self.invincible = False
+            self.invincibilty_frames = INVICIBILITY_FRAMES
+
+            print("Now is with you")
+
+
     def handle_physics(self):
         self.handle_orientation()
         # self.handle_sprite_flip()
         self.handle_collision()
         self.handle_collision_with_enemy()
+        self.handle_invencibility()
 
 
     def update(self):

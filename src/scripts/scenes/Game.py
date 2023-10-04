@@ -67,6 +67,7 @@ class Game(Scene):
             self.sound_player.play_sound("src/assets/sounds/wilhelmscream.wav")
             
         self.player.kill()
+        self.player.alive = False
 
         time.sleep(1.15)
 
@@ -99,6 +100,7 @@ class Game(Scene):
         if self.minion_counter == 5:
 
             print('boss time')
+
             self.boss = Boss(
                 position=(WIDTH, 0),
 
@@ -121,6 +123,8 @@ class Game(Scene):
 
             self.sound_player.play_sound("src/assets/sounds/boss.wav")
 
+            
+
         
         if self.minion_counter > 5:
 
@@ -133,7 +137,13 @@ class Game(Scene):
                 behavior="walk_lr",
             )
 
-        
+    def handle_end_of_scene(self):
+
+        if self.active == False or not(self.player.alive):
+
+            self.music_player.stop_music()
+            self.sound_player.stop_sound()
+
 
     def generate_terrain(self):
         for i in range(20):
