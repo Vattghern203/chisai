@@ -1,6 +1,7 @@
 from scripts.Entity import Entity
 from typing import List
 from scripts.settings import TILE_SIZE, GRAVITY, WIDTH
+import time
 
 import pygame
 
@@ -10,7 +11,7 @@ class Boss(Entity):
             self,
             position: List[int],
             sprite_path: str,
-            groups:pygame.sprite.Group,
+            groups: pygame.sprite.Group,
             parameters: dict
         ):
 
@@ -21,9 +22,10 @@ class Boss(Entity):
     
         self.rect = self.image.get_rect(topleft=position)
 
-        self.speed = 5  
+        self.speed = 1
         self.health = 10  
         self.attack_cooldown = 60
+        self.mass = 10
 
         self.attack_duration = 3
 
@@ -31,9 +33,10 @@ class Boss(Entity):
         self.player = parameters["player"]
         self.collision_group = parameters["collision_group"]
 
-        self.direction = pygame.math.Vector2(1, 0)
+        self.direction = pygame.math.Vector2(0, 0)
 
     def apply_gravity(self):
+
         self.rect.move_ip(0, self.direction.y)
 
     def handle_collision(self):
@@ -43,12 +46,14 @@ class Boss(Entity):
 
     def move(self):
         self.rect.x += self.direction.x * self.speed
-
         
-        if self.rect.right >= WIDTH - self.rect.width:
+        if self.rect.right >= WIDTH:
+            self.rect.right = WIDTH - 1
             self.direction.x = -1
 
+    # Evitar que o boss saia para a esquerda da tela
         if self.rect.left <= 0:
+            self.rect.left = -1
             self.direction.x = 1
     
     def follow_player(self):
@@ -56,9 +61,9 @@ class Boss(Entity):
         move_y = 0
 
         if self.player.rect.x < self.rect.x:
-            move_x = 1
-        elif self.player.rect.x > self.rect.x:
             move_x = -1
+        elif self.player.rect.x > self.rect.x:
+            move_x = 1
 
         if self.player.rect.y < self.rect.y:
             move_y = -1
@@ -67,6 +72,7 @@ class Boss(Entity):
 
         self.direction.x = move_x
         self.direction.y = move_y
+        
 
     def update(self):
         self.apply_gravity()

@@ -22,6 +22,8 @@ class Game(Scene):
 
         self.enemy_sprites = pygame.sprite.Group()
         self.collision_group = pygame.sprite.Group()
+        
+        self.hero_group = pygame.sprite.GroupSingle()
         self.boss_group = pygame.sprite.GroupSingle()
 
         self.sound_player = SoundPlayer()
@@ -44,7 +46,7 @@ class Game(Scene):
                 'collision_group': self.collision_group,
                 'enemy_sprites': self.enemy_sprites,
                 'boss_group': self.boss_group,
-                "minion_counter": self.minion_counter
+                "minion_counter": self.minion_counter,
             },
         )
 
@@ -63,14 +65,12 @@ class Game(Scene):
         elif death_condition == "fall":
 
             self.sound_player.play_sound("src/assets/sounds/wilhelmscream.wav")
-            #print('dyiiiiiiiiiiiiiiiiiiiiiiiiing')
-
+            
         self.player.kill()
 
         time.sleep(1.15)
 
         self.active = False
-
 
     
     def gameover(self):
@@ -98,18 +98,16 @@ class Game(Scene):
 
         if self.minion_counter == 5:
 
-
-
             print('boss time')
             self.boss = Boss(
-                position=(WIDTH // 2, HEIGHT // 2),
+                position=(WIDTH, 0),
 
                 sprite_path="src/assets/sprites/enemy/boss.png",
 
                 groups=[
                     self.all_sprites,
-                    self.enemy_sprites,
                     self.boss_group,
+                    self.enemy_sprites
                 ],
 
                 parameters={

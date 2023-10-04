@@ -2,6 +2,7 @@ import pygame
 from typing import List
 from scripts.Entity import Entity
 from scripts.utils.EventHandler import EventHandler
+from scripts.settings import TILE_SIZE, GRAVITY
 
 class Player(Entity):
     def __init__(
@@ -15,19 +16,25 @@ class Player(Entity):
         self.speed: int = 6
         self.alive: bool = True
         self.mass: float | int = 10
-        self.health = 5
+        self.health: int = 5
 
         # Group Related
         self.block_group = parameters['block_group']
         self.collision_group = parameters["collision_group"]
         self.enemy_group = parameters["enemy_sprites"]
+        self.minion_counter = parameters["minion_counter"]
+        self.boss_group = parameters["boss_group"]
 
         self.attack_duration = 0
         self.attacking = False
         self.attack_cooldown = 0
         self.attack_cooldown_duration = 30  # Adjust as needed
 
-        self.minion_counter = parameters["minion_counter"]
+        self.jump_count = 0
+        self.max_jump_count = 2
+
+
+
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -45,9 +52,28 @@ class Player(Entity):
         if keys[pygame.K_e]:
             self.handle_attack()
 
-        if self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE):
+        if (self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE) and self.jump_count < self.max_jump_count):
+
             self.touching_ground = False
+
+            move_y = -self.jump_force
+
+            self.jump_count += 1
+
+            print(self.jump_count)
+
+        elif self.jump_count == 1 and EventHandler.keydown(pygame.K_SPACE):
+
+            self.jump_count += 1
+            print(self.jump_count)
+
             move_y -= self.jump_force
+
+            self.jump_count = 0
+
+        if self.jump_count == 2 and self.touching_ground == True:
+
+            self.jump_count = 0
 
         self.direction.x = move_x
         self.direction.y = move_y
@@ -63,9 +89,13 @@ class Player(Entity):
                 self.collision_math(sprite.rect)
                 if self.attacking:
                     print('Hitted', sprite)
-                    sprite.kill()
+                    sprite.health -= 1
 
                     self.minion_counter -= 1
+
+                    if sprite.health <= 0:
+
+                        sprite.kill()
 
                     print(self.minion_counter, 'remaining')
 
@@ -90,6 +120,7 @@ class Player(Entity):
         # self.handle_sprite_flip()
         self.handle_collision()
         self.handle_collision_with_enemy()
+
 
     def update(self):
         self.attack_cooldown -= 1
