@@ -27,6 +27,7 @@ class Enemy(Entity):
         self.direction: pygame.math.Vector2 = pygame.math.Vector2(1, 0)  # Start by moving to the right
 
         self.behavior = behavior
+        self.health = 1
 
         print(self.behavior)
 

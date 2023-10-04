@@ -49,7 +49,7 @@ class Entity(pygame.sprite.Sprite):
 
         self.mass = 2
 
-        self.jump_force: int = 24
+        self.jump_force: int = 48
 
         self.touching_ground: bool = False
 
