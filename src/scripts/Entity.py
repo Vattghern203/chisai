@@ -93,12 +93,6 @@ class Entity(pygame.sprite.Sprite):
             self.sprite_orientation["right"] = True
             self.current_sprite_orientation = "right"
 
-        else:
-
-            self.sprite_orientation["left"] = False
-            self.sprite_orientation["right"] = True
-            self.current_sprite_orientation = "right"
-
         if self.direction.y != 0:
 
             self.orientation = "vertical"
@@ -112,17 +106,23 @@ class Entity(pygame.sprite.Sprite):
 
     def handle_sprite_orientation(self) -> None:
 
-        print('Current Sprite Orientation', self.sprite_orientation)
+        sprite_right = self.sprite_orientation["right"] and not self.sprite_orientation["left"]
+        sprite_left = self.sprite_orientation["left"] and not self.sprite_orientation["right"]
 
-        if (self.sprite_orientation["right"] and not (self.current_sprite_orientation == "right")) or (self.sprite_orientation["left"] and not (self.current_sprite_orientation == "left")):
+        previous_value = sprite_left or sprite_right
+
+        print('previous value', previous_value)
+
+        if previous_value != sprite_right or sprite_left:
 
             self.flip_sprite()
 
-        if self.sprite_orientation["left"] and not (self.sprite_orientation["right"]):
+        #print('Current Sprite Orientation', self.sprite_orientation)
 
-            self.flip_sprite()
+        print('sprite right', sprite_right)
+        print('sprite left', sprite_left)
 
-        else: pass
+    
 
     def flip_sprite(self) -> None:
 

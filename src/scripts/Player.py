@@ -99,6 +99,8 @@ class Player(Entity):
         self.direction.x = move_x
         self.direction.y = move_y
 
+        self.handle_orientation()
+
 
     def handle_dash(self):
 
@@ -196,7 +198,6 @@ class Player(Entity):
         self.handle_collision()
         self.handle_collision_with_enemy()
         self.handle_invencibility()
-        self.handle_orientation()
 
 
     def update(self):
