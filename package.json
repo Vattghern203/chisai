@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "python src/main.py",
-    "dev": "cd venv/Scripts/ && activate.bat"
+    "env": "cd venv/Scripts/ && activate.bat",
+    "setup": "npm run env && npm run start"
   },
   "keywords": [
     "pygame", "cool", "AAA"

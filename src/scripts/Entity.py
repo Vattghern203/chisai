@@ -34,9 +34,11 @@ class Entity(pygame.sprite.Sprite):
             "bottom": False
         }
 
+        self.current_sprite_orientation: Literal["left", "right"] = "right"
+
         self.image = pygame.transform.scale(pygame.image.load(
             sprite_path).convert_alpha(), (TILE_SIZE, TILE_SIZE))
-        
+
         self.mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.mask.to_surface()
 
@@ -79,32 +81,52 @@ class Entity(pygame.sprite.Sprite):
 
     def handle_orientation(self):
 
-        if self.direction.x != 0:
+        if self.direction.x < 0:
 
-            self.orientation = "horizontal"
+            self.sprite_orientation["left"] = True
+            self.sprite_orientation["right"] = False
+            self.current_sprite_orientation = "left"
 
-        elif self.direction.y != 0:
+        elif self.direction.x > 0:
+
+            self.sprite_orientation["left"] = False
+            self.sprite_orientation["right"] = True
+            self.current_sprite_orientation = "right"
+
+        else:
+
+            self.sprite_orientation["left"] = False
+            self.sprite_orientation["right"] = True
+            self.current_sprite_orientation = "right"
+
+        if self.direction.y != 0:
 
             self.orientation = "vertical"
 
-        if self.direction.x > 0:
+        else:
+            self.orientation = "horizontal"
 
-            self.sprite_orientation["left"] = False
+        self.handle_sprite_orientation()
 
-            self.sprite_orientation["right"] = True
 
-        elif self.direction.x < 0:
 
-            self.sprite_orientation["left"] = True
+    def handle_sprite_orientation(self) -> None:
 
-            self.sprite_orientation["right"] = False
+        print('Current Sprite Orientation', self.sprite_orientation)
 
-        self.flip_sprite()    
+        if (self.sprite_orientation["right"] and not (self.current_sprite_orientation == "right")) or (self.sprite_orientation["left"] and not (self.current_sprite_orientation == "left")):
 
-    def flip_sprite(self):
+            self.flip_sprite()
 
-        if self.sprite_orientation["left"]:
-            self.image = pygame.transform.flip(self.image, True, False)
+        if self.sprite_orientation["left"] and not (self.sprite_orientation["right"]):
+
+            self.flip_sprite()
+
+        else: pass
+
+    def flip_sprite(self) -> None:
+
+        self.image = pygame.transform.flip(self.image, True, False)
 
     def collision_math(self, rect):
         overlap_x = min(self.rect.right, rect.right) - \

@@ -6,7 +6,7 @@ from scripts.settings import TILE_SIZE, GRAVITY
 
 
 INVICIBILITY_FRAMES = 60
-JUMP_FORCE = 24
+JUMP_FORCE = 16
 
 class Player(Entity):
     def __init__(
@@ -77,7 +77,7 @@ class Player(Entity):
 
             self.touching_ground = False
 
-            move_y = -self.jump_force
+            move_y = -self.jump_force * 1.05
 
             self.jump_count += 1
 
@@ -101,8 +101,6 @@ class Player(Entity):
 
 
     def handle_dash(self):
-
-        
 
         print('dash')
 
@@ -166,15 +164,6 @@ class Player(Entity):
 
     # MOVIMENTATION
 
-    def handle_jump(self):
-
-        if self.touching_ground and EventHandler.keydown(pygame.K_SPACE):
-            jump_direction = pygame.math.Vector2(0, -1).normalize()  # Upward direction
-            self.direction.x += jump_direction.x * JUMP_FORCE
-            self.direction.y += jump_direction.y * JUMP_FORCE
-            self.touching_ground = False
-
-
     def handle_attack(self):
 
         if not self.attacking and self.attack_cooldown <= 0:
@@ -203,11 +192,11 @@ class Player(Entity):
 
 
     def handle_physics(self):
-        self.handle_orientation()
         # self.handle_sprite_flip()
         self.handle_collision()
         self.handle_collision_with_enemy()
         self.handle_invencibility()
+        self.handle_orientation()
 
 
     def update(self):
