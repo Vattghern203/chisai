@@ -4,11 +4,11 @@ from scripts.Entity import Entity
 from scripts.utils.EventHandler import EventHandler
 from scripts.settings import TILE_SIZE, GRAVITY
 
-
 INVICIBILITY_FRAMES = 60
 JUMP_FORCE = 16
 
 class Player(Entity):
+    
     def __init__(
             self,
             position: List[int],
@@ -51,19 +51,25 @@ class Player(Entity):
 
 
     def input(self):
+
         keys = pygame.key.get_pressed()
         move_x = 0
         move_y = 0
 
         if keys[pygame.K_a]:
-
+            if self.current_sprite_orientation == 'right':
+                self.flip_sprite()
+                
             move_x = -1
 
         elif keys[pygame.K_d]:
+            if self.current_sprite_orientation == 'left':
+                self.flip_sprite()
 
             move_x = 1
 
         if keys[pygame.K_s]:
+
             move_y = 1
 
         if keys[pygame.K_LSHIFT]:
@@ -71,13 +77,15 @@ class Player(Entity):
             self.handle_dash()
 
         if keys[pygame.K_e]:
+
             self.handle_attack()
 
         if (self.touching_ground == True and EventHandler.keydown(pygame.K_SPACE) and self.jump_count < self.max_jump_count):
 
+            self.handle_jump()
+
             self.touching_ground = False
 
-            move_y = -self.jump_force * 1.05
 
             self.jump_count += 1
 
@@ -87,8 +95,7 @@ class Player(Entity):
 
             self.jump_count += 1
             print(self.jump_count)
-
-            move_y -= self.jump_force
+            self.handle_jump()
 
             self.jump_count = 0
 
@@ -100,6 +107,11 @@ class Player(Entity):
         self.direction.y = move_y
 
         self.handle_orientation()
+
+
+    def handle_jump(self):
+
+        self.gravitacional_force *= -1
 
 
     def handle_dash(self):

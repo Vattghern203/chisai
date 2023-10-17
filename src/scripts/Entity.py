@@ -33,7 +33,7 @@ class Entity(pygame.sprite.Sprite):
             "top": False,
             "bottom": False
         }
-
+ 
         self.current_sprite_orientation: Literal["left", "right"] = "right"
 
         self.image = pygame.transform.scale(pygame.image.load(
@@ -100,14 +100,14 @@ class Entity(pygame.sprite.Sprite):
         else:
             self.orientation = "horizontal"
 
-        self.handle_sprite_orientation()
+        #self.handle_sprite_orientation()
 
 
 
-    def handle_sprite_orientation(self) -> None:
+    """ def handle_sprite_orientation(self) -> None:
 
-        sprite_right = self.sprite_orientation["right"] and not self.sprite_orientation["left"]
-        sprite_left = self.sprite_orientation["left"] and not self.sprite_orientation["right"]
+        sprite_right = self.sprite_orientation["right"] and not self.current_sprite_orientation == "left"
+        sprite_left = self.sprite_orientation["left"] and not self.current_sprite_orientation == "right"
 
         previous_value = sprite_left or sprite_right
 
@@ -120,7 +120,7 @@ class Entity(pygame.sprite.Sprite):
         #print('Current Sprite Orientation', self.sprite_orientation)
 
         print('sprite right', sprite_right)
-        print('sprite left', sprite_left)
+        print('sprite left', sprite_left) """
 
     
 
